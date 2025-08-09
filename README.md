@@ -7,8 +7,9 @@ Components:
 - Traefik (ingress controller)
 - VictoriaMetrics (metrics storage)
 - VictoriaLogs (logs storage)
-- Mimir (metrics, optional)
 - OpenTelemetry Collector (telemetry pipeline)
+- Jaeger Operator (installs CRDs and manages Jaeger)
+- Jaeger (all-in-one, in-memory storage)
 - Sample App (Kustomize-based demo app)
 
 ## Structure

@@ -5,7 +5,8 @@ resources:
   - ../../apps/traefik/app.yaml
   - ../../apps/victoriametrics/app.yaml
   - ../../apps/victorialogs/app.yaml
-  - ../../apps/mimir/app.yaml
   - ../../apps/opentelemetry-operator/app.yaml
   - ../../apps/otel-collector-cr/app.yaml
   - ../../apps/sample-app/app.yaml
+  - ../../apps/jaeger-operator/app.yaml
+  - ../../apps/jaeger/app.yaml

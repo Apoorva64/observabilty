@@ -46,6 +46,10 @@ spec:
             from_attribute: k8s.pod.name
     exporters:
       logging: { loglevel: info }
+      jaeger:
+        endpoint: jaeger-collector.observability.svc:14250
+        tls:
+          insecure: true
       otlphttp/victoriametrics:
         compression: gzip
         encoding: proto
@@ -61,7 +65,7 @@ spec:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [logging]
+          exporters: [jaeger, logging]
         metrics:
           receivers: [otlp, prometheus]
           processors: [memory_limiter, batch]
