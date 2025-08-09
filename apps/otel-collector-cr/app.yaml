@@ -18,9 +18,9 @@ spec:
     automated:
       prune: true
       selfHeal: true
-  syncOptions:
-    - CreateNamespace=true
-    - SkipDryRunOnMissingResource=true
+    syncOptions:
+      - CreateNamespace=true
+      - SkipDryRunOnMissingResource=true
   ignoreDifferences:
     - group: opentelemetry.io
       kind: OpenTelemetryCollector
