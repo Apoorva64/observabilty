@@ -20,7 +20,7 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-  - SkipDryRunOnMissingResource=true
+      - SkipDryRunOnMissingResource=true
   ignoreDifferences:
     - group: opentelemetry.io
       kind: OpenTelemetryCollector
