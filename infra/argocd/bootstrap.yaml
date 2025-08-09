@@ -12,7 +12,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/your/repo.git
+    repoURL: https://github.com/Apoorva64/observabilty.git
     targetRevision: HEAD
     path: clusters/dev
   destination:
