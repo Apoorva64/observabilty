@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: otel-collector
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/your/repo.git
+    targetRevision: HEAD
+    path: apps/otel-collector-cr/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  - SkipDryRunOnMissingResource=true
+  ignoreDifferences:
+    - group: opentelemetry.io
+      kind: OpenTelemetryCollector
+      jsonPointers:
+        - /status

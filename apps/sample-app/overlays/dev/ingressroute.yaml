@@ -1,0 +1,13 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sample-app
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`sample.local`)
+      kind: Rule
+      services:
+        - name: dev-sample-app
+          port: 80

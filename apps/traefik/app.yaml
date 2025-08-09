@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://helm.traefik.io/traefik
+    chart: traefik
+    targetRevision: 37.0.0
+    helm:
+      releaseName: traefik
+      values: |
+        deployment:
+          kind: Deployment
+          podAnnotations:
+            prometheus.io/scrape: "true"
+            prometheus.io/path: "/metrics"
+            prometheus.io/port: "9100"
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://otel-collector-collector.observability.svc:4317
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: grpc
+            - name: OTEL_SERVICE_NAME
+              value: traefik
+            - name: OTEL_TRACES_SAMPLER
+              value: parentbased_always_on
+        metrics:
+          prometheus:
+            enabled: true
+        service:
+          type: LoadBalancer
+        ingressRoute:
+          dashboard:
+            enabled: true
+        additionalArguments:
+          - --api.dashboard=true
+          - --tracing=true
+          - --tracing.provider=opentelemetry
+          - --tracing.openTelemetry.address=otel-collector-collector.observability.svc:4317
+          - --tracing.openTelemetry.insecure=true
+          - --tracing.sampleRate=1.0
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
