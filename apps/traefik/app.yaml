@@ -12,36 +12,30 @@ spec:
     helm:
       releaseName: traefik
       values: |
-        deployment:
-          kind: Deployment
-          podAnnotations:
-            prometheus.io/scrape: "true"
-            prometheus.io/path: "/metrics"
-            prometheus.io/port: "9100"
-          env:
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: http://otel-collector-collector.observability.svc:4317
-            - name: OTEL_EXPORTER_OTLP_PROTOCOL
-              value: grpc
-            - name: OTEL_SERVICE_NAME
-              value: traefik
-            - name: OTEL_TRACES_SAMPLER
-              value: parentbased_always_on
+        # OpenTelemetry: push Traefik metrics and traces to the cluster Collector
         metrics:
-          prometheus:
+          otlp:
             enabled: true
-        service:
-          type: LoadBalancer
-        ingressRoute:
-          dashboard:
+            # add useful labels for correlation
+            addEntryPointsLabels: true
+            addRoutersLabels: true
+            addServicesLabels: true
+            http:
+              enabled: true
+              # OTLP/HTTP endpoint exposed by the OpenTelemetry Collector
+              endpoint: "http://otel-collector-collector.observability.svc:4318/v1/metrics"
+
+        tracing:
+          # optional but recommended naming
+          serviceName: traefik
+          sampleRate: 1.0
+          otlp:
             enabled: true
-        additionalArguments:
-          - --api.dashboard=true
-          - --tracing=true
-          - --tracing.provider=opentelemetry
-          - --tracing.openTelemetry.address=otel-collector-collector.observability.svc:4317
-          - --tracing.openTelemetry.insecure=true
-          - --tracing.sampleRate=1.0
+            http:
+              enabled: true
+              # OTLP/HTTP traces endpoint on the Collector
+              endpoint: "http://otel-collector-collector.observability.svc:4318/v1/traces"
+
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress
