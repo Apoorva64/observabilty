@@ -5,10 +5,8 @@ resources:
   - ../../apps/cert-manager/app.yaml
   - ../../apps/cert-manager-issuers/app.yaml
   - ../../apps/traefik/app.yaml
-  - ../../apps/victoriametrics/app.yaml
-  - ../../apps/victorialogs/app.yaml
   - ../../apps/opentelemetry-operator/app.yaml
   - ../../apps/otel-collector-cr/app.yaml
   - ../../apps/sample-app/app.yaml
-  - ../../apps/jaeger-operator/app.yaml
-  - ../../apps/jaeger/app.yaml
+  - ../../apps/prometheus-operator/app.yaml
+  - ../../apps/lgtm/app.yaml

@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-operator
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 66.3.1
+    helm:
+      releaseName: prometheus-operator
+      values: |
+        namespaceOverride: ""
+        rbac:
+          create: true
+        releaseLabel: true
+        prometheus:
+          prometheusSpec:
+            scrapeInterval: "60s"
+            remoteWrite:
+              - url: http://lgtm-mimir-nginx:80/api/v1/push
+            externalLabels:
+              environment: mimir
+          monitor:
+            enabled: true
+            interval: ""
+            sampleLimit: 0
+            targetLimit: 0
+            labelLimit: 0
+            labelNameLengthLimit: 0
+            labelValueLengthLimit: 0
+            scrapeTimeout: ""
+            proxyUrl: ""
+            honorLabels: true
+            metricRelabelings: []
+            relabelings: []
+        kubeScheduler:
+          enabled: false
+        kubeControllerManager:
+          enabled: false
+        grafana:
+          enabled: false
+          forceDeployDashboards: true
+        alertmanager:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
